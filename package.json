@@ -1,0 +1,31 @@
+{
+  "name": "talent-iq",
+  "version": "1.0.0",
+  "description": "Full-Stack Interview Platform with VSCode-powered code editor, video calls, and real-time collaboration",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "start:backend": "cd backend && npm start",
+    "start": "npm run start:backend",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "clean": "cd frontend && rm -rf node_modules dist && cd ../backend && rm -rf node_modules"
+  },
+  "keywords": [
+    "interview",
+    "coding",
+    "video-call",
+    "collaboration",
+    "react",
+    "nodejs",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

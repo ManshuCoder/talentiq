@@ -1,0 +1,33 @@
+{
+  "name": "talent-iq-backend",
+  "version": "1.0.0",
+  "description": "Backend API for TalentIQ Interview Platform",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "keywords": [
+    "api",
+    "interview",
+    "backend",
+    "express",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@clerk/express": "^1.3.21",
+    "@stream-io/node-sdk": "^0.4.14",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "inngest": "^3.29.1",
+    "mongoose": "^8.9.3",
+    "stream-chat": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
