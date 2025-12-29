@@ -16,12 +16,15 @@
     "@tanstack/react-query": "^5.64.1",
     "axios": "^1.7.9",
     "canvas-confetti": "^1.9.3",
+    "daisyui": "^5.5.14",
     "lucide-react": "^0.469.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",
     "react-resizable-panels": "^2.1.7",
-    "react-router": "^7.1.1"
+    "react-router": "^7.1.1",
+    "stream-chat": "^9.27.2",
+    "stream-chat-react": "^13.13.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
