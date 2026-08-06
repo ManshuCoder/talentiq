@@ -4,7 +4,8 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "build": "node -e \"console.log('No build step needed for backend; ready to deploy')\""
+
   },
   "type": "module",
   "keywords": [],
@@ -23,7 +24,6 @@
     "stream-chat": "^9.26.0"
   },
   "devDependencies": {
-    "esbuild": "^0.27.1",
     "nodemon": "^3.1.10"
   }
 }
