@@ -1,8 +1,16 @@
 import axios from "axios";
 
+const getBaseUrl = () => {
+  let url = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+  if (!url.endsWith('/api') && !url.endsWith('/api/')) {
+    url = url.replace(/\/$/, '') + '/api';
+  }
+  return url;
+};
+
 const axiosInstance = axios.create({
-  // fall back to local API if env var is missing to avoid silent undefined baseURL
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
+  // use the normalized base URL to prevent 404s
+  baseURL: getBaseUrl(),
   withCredentials: true, // send cookies for Clerk auth (fallback)
 });
 
