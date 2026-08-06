@@ -16,12 +16,16 @@ export const protectRoute = [
       if (!user) {
         // Auto-sync user if they don't exist in the DB yet (prevents 404 race conditions)
         const clerkUserData = await clerkClient.users.getUser(clerkId);
-        user = await User.create({
-          clerkId: clerkId,
-          email: clerkUserData.emailAddresses[0]?.emailAddress,
-          name: `${clerkUserData.firstName || ""} ${clerkUserData.lastName || ""}`.trim() || "User",
-          profileImage: clerkUserData.imageUrl || "",
-        });
+        const email = clerkUserData.emailAddresses[0]?.emailAddress;
+        const name = `${clerkUserData.firstName || ""} ${clerkUserData.lastName || ""}`.trim() || "User";
+        const profileImage = clerkUserData.imageUrl || "";
+
+        // Link existing account by email, or create a new one
+        user = await User.findOneAndUpdate(
+          { email: email },
+          { clerkId, name, profileImage },
+          { new: true, upsert: true }
+        );
         
         // Ensure they exist in Stream as well
         await upsertStreamUser({

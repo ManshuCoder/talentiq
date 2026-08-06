@@ -24,16 +24,16 @@ router.post("/sync", requireAuth(), async (req, res) => {
 
     // Get user data from Clerk
     const clerkUserData = await clerkClient.users.getUser(clerkId);
+    const email = clerkUserData.emailAddresses[0]?.emailAddress;
+    const name = `${clerkUserData.firstName || ""} ${clerkUserData.lastName || ""}`.trim() || "User";
+    const profileImage = clerkUserData.imageUrl || "";
 
-    // Create new user
-    const newUser = {
-      clerkId: clerkId,
-      email: clerkUserData.emailAddresses[0]?.emailAddress,
-      name: `${clerkUserData.firstName || ""} ${clerkUserData.lastName || ""}`.trim() || "User",
-      profileImage: clerkUserData.imageUrl || "",
-    };
-
-    user = await User.create(newUser);
+    // Link existing account by email, or create a new one
+    user = await User.findOneAndUpdate(
+      { email: email },
+      { clerkId, name, profileImage },
+      { new: true, upsert: true }
+    );
 
     // Create user in Stream
     await upsertStreamUser({
