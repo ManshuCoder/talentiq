@@ -21,10 +21,24 @@ const __dirname = path.dirname(__filename);
 
 // middleware
 app.use(express.json());
-// credentials:true meaning?? => server allows a browser to include cookies on request
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://talentiqxs2u.vercel.app",
+];
+
+if (ENV.CLIENT_URL && !allowedOrigins.includes(ENV.CLIENT_URL)) {
+  allowedOrigins.push(ENV.CLIENT_URL);
+}
+
 app.use(
   cors({
-    origin: ENV.CLIENT_URL,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // Allow non-browser requests
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
