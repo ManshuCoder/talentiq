@@ -1,7 +1,7 @@
 import {
   CallControls,
   CallingState,
-  SpeakerLayout,
+  ParticipantView,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 import { Loader2Icon, MessageSquareIcon, UsersIcon, XIcon } from "lucide-react";
@@ -14,9 +14,10 @@ import "stream-chat-react/dist/css/v2/index.css";
 
 function VideoCallUI({ chatClient, channel }) {
   const navigate = useNavigate();
-  const { useCallCallingState, useParticipantCount } = useCallStateHooks();
+  const { useCallCallingState, useParticipantCount, useParticipants } = useCallStateHooks();
   const callingState = useCallCallingState();
   const participantCount = useParticipantCount();
+  const participants = useParticipants();
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   if (callingState === CallingState.JOINING) {
@@ -53,8 +54,12 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="flex-1 bg-base-300 rounded-lg overflow-hidden relative">
-          <SpeakerLayout />
+        <div className="flex-1 bg-base-300 rounded-lg overflow-hidden relative flex flex-wrap gap-2 p-2 justify-center items-center">
+          {participants.map((participant) => (
+            <div key={participant.sessionId} className="flex-1 min-w-[300px] max-w-[50%] h-full relative">
+              <ParticipantView participant={participant} />
+            </div>
+          ))}
         </div>
 
         <div className="bg-base-100 p-3 rounded-lg shadow flex justify-center">
