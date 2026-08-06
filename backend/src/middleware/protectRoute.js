@@ -1,5 +1,6 @@
-import { requireAuth } from "@clerk/express";
+import { clerkClient, requireAuth } from "@clerk/express";
 import User from "../models/User.js";
+import { upsertStreamUser } from "../lib/stream.js";
 
 export const protectRoute = [
   requireAuth(),
@@ -10,9 +11,25 @@ export const protectRoute = [
       if (!clerkId) return res.status(401).json({ message: "Unauthorized - invalid token" });
 
       // find user in db by clerk ID
-      const user = await User.findOne({ clerkId });
+      let user = await User.findOne({ clerkId });
 
-      if (!user) return res.status(404).json({ message: "User not found" });
+      if (!user) {
+        // Auto-sync user if they don't exist in the DB yet (prevents 404 race conditions)
+        const clerkUserData = await clerkClient.users.getUser(clerkId);
+        user = await User.create({
+          clerkId: clerkId,
+          email: clerkUserData.emailAddresses[0]?.emailAddress,
+          name: `${clerkUserData.firstName || ""} ${clerkUserData.lastName || ""}`.trim() || "User",
+          profileImage: clerkUserData.imageUrl || "",
+        });
+        
+        // Ensure they exist in Stream as well
+        await upsertStreamUser({
+          id: user.clerkId.toString(),
+          name: user.name,
+          image: user.profileImage,
+        });
+      }
 
       // attach user to req
       req.user = user;
